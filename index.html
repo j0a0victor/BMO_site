@@ -81,7 +81,7 @@ button {
 </div>
 
 <script>
-const API_URL = "https://bmo-site.onrender.com/voice";
+const API_URL = "/voice";
 
 let mediaRecorder;
 let audioChunks = [];
@@ -96,9 +96,7 @@ const chat = document.getElementById("chat");
 const startSound = new Audio("https://actions.google.com/sounds/v1/ui/click.ogg");
 const stopSound = new Audio("https://actions.google.com/sounds/v1/ui/confirm.ogg");
 
-// ----------------------
 // WAKE WORD
-// ----------------------
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
 
@@ -109,7 +107,7 @@ btn.onclick = () => {
 
 function startWakeWord() {
     if (!SpeechRecognition) {
-        alert("Seu navegador não suporta reconhecimento de voz 😢");
+        alert("Seu navegador não suporta reconhecimento de voz");
         return;
     }
 
@@ -126,8 +124,6 @@ function startWakeWord() {
     recognition.onresult = (event) => {
         const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
 
-        console.log("Ouvi:", transcript);
-
         if (transcript.includes("bimo") && !recording) {
             recognition.stop();
             startRecording();
@@ -143,9 +139,7 @@ function startWakeWord() {
     recognition.start();
 }
 
-// ----------------------
 // GRAVAÇÃO
-// ----------------------
 async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -181,9 +175,7 @@ function stopRecording() {
     stopSound.play();
 }
 
-// ----------------------
 // ENVIO
-// ----------------------
 async function sendAudio() {
     const blob = new Blob(audioChunks, { type: "audio/webm" });
 
@@ -228,7 +220,6 @@ async function sendAudio() {
     } catch (err) {
         console.error(err);
         statusEl.innerText = "Erro na conexão";
-        avatar.style.background = "#ef4444";
     }
 }
 
