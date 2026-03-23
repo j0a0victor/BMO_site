@@ -97,9 +97,11 @@ async def voice(file: UploadFile = File(...)):
         with open(temp_path, "rb") as audio_file:
             transcription = client.audio.transcriptions.create(
                 model="gpt-4o-transcribe",
-                file=audio_file
-            )
-
+                file=audio_file,
+                language="pt",
+                prompt="O usuário fala português brasileiro de forma natural."
+    )
+       
         texto = transcription.text.strip()
         os.remove(temp_path)
 
