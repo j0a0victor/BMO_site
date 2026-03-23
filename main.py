@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from openai import OpenAI
 from dotenv import load_dotenv
 import requests
@@ -7,13 +8,16 @@ import os
 import tempfile
 import traceback
 
+# ----------------------
+# CONFIG
+# ----------------------
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 SYSTEM_PROMPT = """
 Você é Bimo, um robô divertido e infantil.
-Fala em frases curtas e criativas.
+Fala em frases curtas, criativas e curiosas.
 """
 
 history = []
@@ -27,11 +31,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def home():
-    return {"status": "ok"}
+# ----------------------
+# SERVE FRONTEND
+# ----------------------
+@app.get("/", response_class=HTMLResponse)
+def serve_front():
+    with open("index.html", "r", encoding="utf-8") as f:
+        return f.read()
 
-
+# ----------------------
+# VOICE ENDPOINT
+# ----------------------
 @app.post("/voice")
 async def voice(file: UploadFile = File(...)):
     try:
