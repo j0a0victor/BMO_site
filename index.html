@@ -58,10 +58,6 @@ button {
     font-size: 16px;
 }
 
-button.recording {
-    background: #ef4444;
-}
-
 .status {
     text-align: center;
     margin-top: 10px;
@@ -78,14 +74,14 @@ button.recording {
 
     <div class="chat" id="chat"></div>
 
-    <button id="btn" onclick="toggleRecording()">🎤 Falar</button>
+    <button id="btn">Ativar Bimo</button>
 
     <div class="status" id="status">Pronto</div>
 
 </div>
 
 <script>
-const API_URL = "https://bmo-site.onrender.com";
+const API_URL = "https://bmo-site.onrender.com/voice";
 
 let mediaRecorder;
 let audioChunks = [];
@@ -97,16 +93,19 @@ const statusEl = document.getElementById("status");
 const avatar = document.getElementById("avatar");
 const chat = document.getElementById("chat");
 
-// sons
 const startSound = new Audio("https://actions.google.com/sounds/v1/ui/click.ogg");
 const stopSound = new Audio("https://actions.google.com/sounds/v1/ui/confirm.ogg");
 
 // ----------------------
-// WAKE WORD (BIMO)
+// WAKE WORD
 // ----------------------
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
 let recognition;
+
+btn.onclick = () => {
+    startWakeWord();
+    btn.innerText = "🟢 Bimo ativo";
+};
 
 function startWakeWord() {
     if (!SpeechRecognition) {
@@ -130,8 +129,6 @@ function startWakeWord() {
         console.log("Ouvi:", transcript);
 
         if (transcript.includes("bimo") && !recording) {
-            console.log("🔥 Wake word detectada!");
-
             recognition.stop();
             startRecording();
         }
@@ -139,21 +136,15 @@ function startWakeWord() {
 
     recognition.onend = () => {
         if (listeningWakeWord && !recording) {
-            recognition.start(); // reinicia sozinho
+            recognition.start();
         }
     };
 
     recognition.start();
 }
 
-// botão agora ativa wake word
-btn.onclick = () => {
-    startWakeWord();
-    btn.innerText = "🟢 Bimo ativo";
-};
-
 // ----------------------
-// GRAVAÇÃO REAL
+// GRAVAÇÃO
 // ----------------------
 async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -170,15 +161,12 @@ async function startRecording() {
     mediaRecorder.start();
 
     recording = true;
-    statusEl.innerText = "Ouvindo pergunta...";
+    statusEl.innerText = "Ouvindo...";
     avatar.style.background = "#facc15";
 
     startSound.play();
 
-    // grava por 4 segundos automaticamente
-    setTimeout(() => {
-        stopRecording();
-    }, 4000);
+    setTimeout(stopRecording, 4000);
 }
 
 function stopRecording() {
@@ -234,14 +222,13 @@ async function sendAudio() {
         audio.onended = () => {
             statusEl.innerText = "Aguardando 'Bimo'...";
             avatar.style.background = "#22c55e";
-
-            // volta a escutar wake word
             startWakeWord();
         };
 
     } catch (err) {
         console.error(err);
-        statusEl.innerText = "Erro";
+        statusEl.innerText = "Erro na conexão";
+        avatar.style.background = "#ef4444";
     }
 }
 
