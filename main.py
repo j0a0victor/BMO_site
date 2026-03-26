@@ -130,7 +130,7 @@ def generate_reply_with_audio(texto: str):
                 "encoding": TTS_ENCODING,
                 "sample_rate": TTS_SAMPLE_RATE
             },
-            "speed": TTS_SPEED
+            "speed": TTS_SPEED,
             "pronunciation_dict_id": "pdict_STcegMkb4wKKn3WjmEATE6"
         },
         headers={
