@@ -53,8 +53,11 @@ Regras de comportamento:
 history = []
 
 BASE_DIR = Path(__file__).resolve().parent
-TTS_MODEL_ID = "sonic-turbo"
-TTS_SAMPLE_RATE = 24000
+TTS_MODEL_ID = "sonic-2"
+TTS_SAMPLE_RATE = 44100
+TTS_ENCODING = "pcm_f32le"
+TTS_SPEED = "slow"
+TTS_API_VERSION = "2025-04-16"
 
 app = FastAPI()
 
@@ -114,14 +117,14 @@ def generate_reply_with_audio(texto: str):
             },
             "output_format": {
                 "container": "wav",
-                "encoding": "pcm_s16le",
-                # 24 kHz melhora clareza e reduz efeito "comprimido"
+                "encoding": TTS_ENCODING,
                 "sample_rate": TTS_SAMPLE_RATE
-            }
+            },
+            "speed": TTS_SPEED
         },
         headers={
             "X-API-Key": os.getenv("CARTESIA_API_KEY"),
-            "Cartesia-Version": "2026-03-01",
+            "Cartesia-Version": TTS_API_VERSION,
             "Content-Type": "application/json"
         }
     )
