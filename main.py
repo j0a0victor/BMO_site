@@ -131,6 +131,7 @@ def generate_reply_with_audio(texto: str):
                 "sample_rate": TTS_SAMPLE_RATE
             },
             "speed": TTS_SPEED
+            "pronunciation_dict_id": "pdict_STcegMkb4wKKn3WjmEATE6"
         },
         headers={
             "X-API-Key": os.getenv("CARTESIA_API_KEY"),
