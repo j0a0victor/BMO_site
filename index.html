@@ -224,6 +224,8 @@ body {
     align-items: center;
     filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.22));
     transition: filter 0.35s ease;
+    transform: scale(clamp(0.62, 0.5 + 0.9vw, 0.96));
+    transform-origin: top center;
 }
 
 .bmo-root[data-state="listening"] {
@@ -709,31 +711,24 @@ body {
 
 .app-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem 2.5rem;
-    align-items: center;
-}
-
-.app-layout-bmo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.app-layout-bmo .hero-visual {
-    min-height: 0;
-    padding: 0.5rem 0;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    align-items: start;
+    max-width: 760px;
+    margin: 0 auto;
 }
 
 .app-layout-chat { min-width: 0; }
 
-@media (max-width: 900px) {
-    .app-layout {
-        grid-template-columns: 1fr;
-        gap: 1.75rem;
-    }
-    .app-layout-bmo { order: 2; }
-    .app-layout-chat { order: 1; }
+.bmo-inline {
+    display: flex;
+    justify-content: center;
+    padding: 0.3rem 0 0.15rem;
+}
+
+.bmo-inline .hero-visual {
+    min-height: clamp(140px, 24vw, 250px);
+    padding: 0;
 }
 
 .chat-card {
@@ -742,6 +737,30 @@ body {
     box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 12px 24px -4px rgba(15, 23, 42, 0.1);
     border: 1px solid var(--border);
     padding: 1.75rem;
+    position: relative;
+}
+
+.chat-card::before,
+.chat-card::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.chat-card::before {
+    top: -18px;
+    left: 42px;
+    border-width: 0 14px 18px 14px;
+    border-color: transparent transparent var(--border) transparent;
+}
+
+.chat-card::after {
+    top: -16px;
+    left: 43px;
+    border-width: 0 13px 17px 13px;
+    border-color: transparent transparent var(--chat-bg) transparent;
 }
 
 .chat-card h2 {
@@ -796,7 +815,43 @@ body {
     gap: 0.65rem;
 }
 
-#btn,
+.text-input-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+#textInput {
+    flex: 1;
+    min-width: 0;
+    padding: 0.8rem 0.95rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font: inherit;
+    font-size: 0.95rem;
+}
+
+#textInput:focus {
+    outline: 2px solid rgba(0, 97, 242, 0.22);
+    border-color: var(--blue);
+}
+
+#btnSend {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    border: none;
+    background: #0f172a;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#btnSend:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#btnMic,
 #btnReplay {
     width: 100%;
     padding: 0.95rem 1.25rem;
@@ -809,13 +864,22 @@ body {
     transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
 }
 
-#btn {
+#btnMic {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 12px;
     background: var(--blue);
     color: var(--white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
 }
 
-#btn:hover { background: var(--blue-dark); }
-#btn:active { transform: scale(0.99); }
+#btnMic:hover { background: var(--blue-dark); }
+#btnMic:active { transform: scale(0.99); }
 
 #btnReplay {
     background: var(--white);
@@ -845,6 +909,139 @@ body {
     font-size: 0.8rem;
     color: #94a3b8;
 }
+
+/* ---------- Responsive (mobile-first refinements) ---------- */
+@media (max-width: 900px) {
+    .app-layout { max-width: 100%; }
+
+    .site-header-inner {
+        padding: 0.85rem 1rem;
+    }
+
+    .hero {
+        padding: 2rem 1rem 3rem;
+    }
+
+    .hero::before {
+        width: 280px;
+        height: 280px;
+        left: -35%;
+        top: 6%;
+    }
+
+    .hero::after {
+        width: 180px;
+        height: 180px;
+        right: -18%;
+        bottom: 10%;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.65rem, 7.5vw, 2.2rem);
+    }
+
+    .hero-lead {
+        font-size: 0.96rem;
+        max-width: 100%;
+    }
+
+    .app-section {
+        margin-top: -1.5rem;
+        padding: 0 1rem;
+    }
+
+    .chat-card {
+        padding: 1.1rem;
+        border-radius: 16px;
+    }
+
+    .chat {
+        height: 240px;
+        padding: 0.85rem;
+    }
+
+    .msg {
+        max-width: 94%;
+        font-size: 0.88rem;
+        padding: 0.58rem 0.78rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .site-header-inner {
+        justify-content: center;
+    }
+
+    .logo {
+        font-size: 1.1rem;
+    }
+
+    .hero {
+        padding-top: 1.6rem;
+    }
+
+    .badge {
+        font-size: 0.68rem;
+        padding: 0.3rem 0.7rem;
+    }
+
+    .btn-outline {
+        width: 100%;
+    }
+
+    .app-layout { gap: 0; }
+
+    .bmo-root { transform: scale(clamp(0.56, 0.42 + 1.2vw, 0.75)); }
+
+    .bmo-inline .hero-visual {
+        min-height: clamp(150px, 38vw, 220px);
+    }
+
+    .chat-card h2 {
+        font-size: 1.02rem;
+    }
+
+    .chat-card .sub {
+        font-size: 0.82rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .chat-actions {
+        gap: 0.55rem;
+    }
+
+    .text-input-row { gap: 0.45rem; }
+
+    #textInput,
+    #btnSend,
+    #btnReplay {
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    #btnMic {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+    }
+
+    #btnSend,
+    #btnReplay {
+        min-height: 44px;
+    }
+
+    .chat-card::before {
+        left: 24px;
+        top: -14px;
+        border-width: 0 11px 14px 11px;
+    }
+
+    .chat-card::after {
+        left: 25px;
+        top: -13px;
+        border-width: 0 10px 13px 10px;
+    }
+}
 </style>
 </head>
 <body>
@@ -868,8 +1065,8 @@ body {
                 <span class="badge">Assistente BMO</span>
                 <h1>Um BMO pessoal para você</h1>
                 <p class="hero-lead">
-                    Toque em "Ativar BMO" para abrir o microfone e fazer sua pergunta.
-                    O envio é automático após cerca de 2,5 s de silêncio.
+                    Digite ou toque no botão de microfone para fazer sua pergunta.
+                    O envio do áudio é automático após cerca de 2,5 s de silêncio.
                 </p>
                 <p>
                     "Não nos responsabilizamos por respostas sarcásticas ou aleatórias."
@@ -883,77 +1080,81 @@ body {
 
     <section class="app-section" id="conversa">
         <div class="app-layout">
-            <div class="app-layout-bmo">
-                <div class="hero-visual">
-                    <div class="bmo-root" id="avatar" data-state="ready" aria-label="Personagem BMO">
-                        <div class="bmo-upper">
-                            <div class="bmo-arm bmo-arm--left">
-                                <span class="bmo-hand" aria-hidden="true"><span class="bmo-hand-mid"></span></span>
-                            </div>
-                            <div class="bmo-console">
-                                <aside class="bmo-side" aria-hidden="true">
-                                    <div class="bmo-speaker">
-                                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                                    </div>
-                                    <div class="bmo-side-letters">B<br>M<br>O</div>
-                                    <div class="bmo-arm-socket"></div>
-                                </aside>
-                                <div class="bmo-face">
-                                    <div class="bmo-screen">
-                                        <div class="bmo-eye bmo-eye--l"></div>
-                                        <div class="bmo-eye bmo-eye--r"></div>
-                                        <div class="bmo-mouth">
-                                            <div class="bmo-teeth"></div>
-                                            <div class="bmo-tongue"></div>
-                                        </div>
-                                    </div>
-                                    <div class="bmo-slot-full"></div>
-                                    <div class="bmo-controls">
-                                        <div class="bmo-col-left">
-                                            <div class="bmo-btn-above-dpad"></div>
-                                            <div class="bmo-dpad"></div>
-                                        </div>
-                                        <div class="bmo-col-right">
-                                            <div class="bmo-actions-stack">
-                                                <svg class="bmo-tri-svg" width="32" height="30" viewBox="0 0 32 30" aria-hidden="true">
-                                                    <polygon points="16,4 28,26 4,26" fill="#7ed9f7" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>
-                                                </svg>
-                                                <span class="bmo-circle-green"></span>
-                                                <span class="bmo-circle-red"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bmo-pills-row">
-                                        <span class="bmo-pill bmo-pill--blue"></span>
-                                        <span class="bmo-pill bmo-pill--purple"></span>
-                                    </div>
-                                </div>
-                                <div class="bmo-edge-r" aria-hidden="true"></div>
-                            </div>
-                            <div class="bmo-arm bmo-arm--right">
-                                <span class="bmo-hand" aria-hidden="true"><span class="bmo-hand-mid"></span></span>
-                            </div>
-                        </div>
-                        <div class="bmo-legs">
-                            <div class="bmo-leg">
-                                <div class="bmo-leg-up"></div>
-                                <div class="bmo-foot"></div>
-                            </div>
-                            <div class="bmo-leg">
-                                <div class="bmo-leg-up"></div>
-                                <div class="bmo-foot"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="app-layout-chat">
                 <div class="chat-card">
                     <h2>Conversa por voz</h2>
-                    <p class="sub">Ative o microfone e fale</p>
+                    <p class="sub">Ative o microfone ou fale por texto</p>
                     <div class="chat" id="chat"></div>
                     <div class="chat-actions">
-                        <button type="button" id="btn">Ativar BMO</button>
+                        <div class="text-input-row">
+                            <input id="textInput" type="text" placeholder="Digite sua mensagem para o Bimo" />
+                            <button type="button" id="btnSend">Enviar</button>
+                            <button type="button" id="btnMic" title="Gravar voz" aria-label="Gravar voz">🎤</button>
+                        </div>
+                        <div class="bmo-inline">
+                            <div class="hero-visual">
+                                <div class="bmo-root" id="avatar" data-state="ready" aria-label="Personagem BMO">
+                                    <div class="bmo-upper">
+                                        <div class="bmo-arm bmo-arm--left">
+                                            <span class="bmo-hand" aria-hidden="true"><span class="bmo-hand-mid"></span></span>
+                                        </div>
+                                        <div class="bmo-console">
+                                            <aside class="bmo-side" aria-hidden="true">
+                                                <div class="bmo-speaker">
+                                                    <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                                                </div>
+                                                <div class="bmo-side-letters">B<br>M<br>O</div>
+                                                <div class="bmo-arm-socket"></div>
+                                            </aside>
+                                            <div class="bmo-face">
+                                                <div class="bmo-screen">
+                                                    <div class="bmo-eye bmo-eye--l"></div>
+                                                    <div class="bmo-eye bmo-eye--r"></div>
+                                                    <div class="bmo-mouth">
+                                                        <div class="bmo-teeth"></div>
+                                                        <div class="bmo-tongue"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="bmo-slot-full"></div>
+                                                <div class="bmo-controls">
+                                                    <div class="bmo-col-left">
+                                                        <div class="bmo-btn-above-dpad"></div>
+                                                        <div class="bmo-dpad"></div>
+                                                    </div>
+                                                    <div class="bmo-col-right">
+                                                        <div class="bmo-actions-stack">
+                                                            <svg class="bmo-tri-svg" width="32" height="30" viewBox="0 0 32 30" aria-hidden="true">
+                                                                <polygon points="16,4 28,26 4,26" fill="#7ed9f7" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>
+                                                            </svg>
+                                                            <span class="bmo-circle-green"></span>
+                                                            <span class="bmo-circle-red"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="bmo-pills-row">
+                                                    <span class="bmo-pill bmo-pill--blue"></span>
+                                                    <span class="bmo-pill bmo-pill--purple"></span>
+                                                </div>
+                                            </div>
+                                            <div class="bmo-edge-r" aria-hidden="true"></div>
+                                        </div>
+                                        <div class="bmo-arm bmo-arm--right">
+                                            <span class="bmo-hand" aria-hidden="true"><span class="bmo-hand-mid"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="bmo-legs">
+                                        <div class="bmo-leg">
+                                            <div class="bmo-leg-up"></div>
+                                            <div class="bmo-foot"></div>
+                                        </div>
+                                        <div class="bmo-leg">
+                                            <div class="bmo-leg-up"></div>
+                                            <div class="bmo-foot"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button type="button" id="btnReplay" disabled>Ouvir última resposta</button>
                     </div>
                     <div class="status" id="status">Pronto</div>
@@ -975,8 +1176,10 @@ let audioChunks = [];
 let recording = false;
 let lastAudio = null;
 
-const btn = document.getElementById("btn");
+const btnMic = document.getElementById("btnMic");
 const btnReplay = document.getElementById("btnReplay");
+const btnSend = document.getElementById("btnSend");
+const textInput = document.getElementById("textInput");
 const statusEl = document.getElementById("status");
 const avatar = document.getElementById("avatar");
 const chat = document.getElementById("chat");
@@ -988,22 +1191,37 @@ function setAvatarState(state) {
     avatar.setAttribute("data-state", state);
 }
 
-btn.onclick = async () => {
-    if (recording || btn.disabled) return;
-    btn.disabled = true;
-    btn.innerText = "Gravando…";
+function setMicButtonState(isRecording) {
+    btnMic.disabled = isRecording;
+    btnMic.textContent = isRecording ? "⏺" : "🎤";
+    btnMic.title = isRecording ? "Gravando..." : "Gravar voz";
+}
+
+btnMic.onclick = async () => {
+    if (recording || btnMic.disabled) return;
+    setMicButtonState(true);
     try {
         await startRecording();
     } catch (e) {
         console.error(e);
-        btn.disabled = false;
-        btn.innerText = "Ativar Bimo";
+        setMicButtonState(false);
     }
 };
 
 btnReplay.onclick = () => {
     replayAudio();
 };
+
+btnSend.onclick = () => {
+    sendTextMessage();
+};
+
+textInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        sendTextMessage();
+    }
+});
 
 async function startRecording() {
     let stream;
@@ -1097,51 +1315,79 @@ async function sendAudio() {
 
         const data = await res.json();
 
-        if (data.error) {
-            statusEl.innerText = data.error;
-            setAvatarState("error");
-            btnReplay.disabled = true;
-            btn.disabled = false;
-            btn.innerText = "Ativar Bimo";
-            return;
-        }
-
-        addMessage(data.text, "user");
-        addMessage(data.reply, "bot");
-
-        statusEl.innerText = "Falando...";
-        setAvatarState("speaking");
-
-        const bytes = Uint8Array.from(
-            data.audio.match(/.{1,2}/g).map(b => parseInt(b, 16))
-        );
-
-        const audioBlob = new Blob([bytes], { type: "audio/wav" });
-        if (lastAudio && lastAudio.src && lastAudio.src.startsWith("blob:")) {
-            URL.revokeObjectURL(lastAudio.src);
-        }
-        const audio = new Audio(URL.createObjectURL(audioBlob));
-
-        lastAudio = audio;
-        btnReplay.disabled = false;
-
-        audio.play();
-
-        audio.onended = () => {
-            statusEl.innerText = "Pronto";
-            setAvatarState("ready");
-            btn.disabled = false;
-            btn.innerText = "Ativar Bimo";
-        };
+        handleAssistantResponse(data);
 
     } catch (err) {
         console.error(err);
         statusEl.innerText = "Erro na conexão";
         setAvatarState("error");
         btnReplay.disabled = true;
-        btn.disabled = false;
-        btn.innerText = "Ativar Bimo";
+        setMicButtonState(false);
     }
+}
+
+async function sendTextMessage() {
+    const text = textInput.value.trim();
+    if (!text || btnSend.disabled) return;
+
+    btnSend.disabled = true;
+    textInput.disabled = true;
+    statusEl.innerText = "Pensando...";
+    setAvatarState("thinking");
+    addMessage(text, "user");
+    textInput.value = "";
+
+    try {
+        const res = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+        if (data.error) {
+            statusEl.innerText = data.error;
+            setAvatarState("error");
+            return;
+        }
+
+        handleAssistantResponse(data, false);
+    } catch (err) {
+        console.error(err);
+        statusEl.innerText = "Erro na conexão";
+        setAvatarState("error");
+    } finally {
+        btnSend.disabled = false;
+        textInput.disabled = false;
+        textInput.focus();
+    }
+}
+
+function handleAssistantResponse(data, appendUser = true) {
+    if (appendUser) addMessage(data.text, "user");
+    addMessage(data.reply, "bot");
+
+    statusEl.innerText = "Falando...";
+    setAvatarState("speaking");
+
+    const bytes = Uint8Array.from(
+        data.audio.match(/.{1,2}/g).map(b => parseInt(b, 16))
+    );
+
+    const audioBlob = new Blob([bytes], { type: "audio/wav" });
+    if (lastAudio && lastAudio.src && lastAudio.src.startsWith("blob:")) {
+        URL.revokeObjectURL(lastAudio.src);
+    }
+    const audio = new Audio(URL.createObjectURL(audioBlob));
+
+    lastAudio = audio;
+    btnReplay.disabled = false;
+
+    audio.play();
+    audio.onended = () => {
+        statusEl.innerText = "Pronto";
+        setAvatarState("ready");
+        setMicButtonState(false);
+    };
 }
 
 function addMessage(text, type) {
@@ -1161,8 +1407,7 @@ function replayAudio() {
     lastAudio.play().catch(() => {
         setAvatarState("ready");
         statusEl.innerText = "Pronto";
-        btn.disabled = false;
-        btn.innerText = "Ativar Bimo";
+        setMicButtonState(false);
     });
 }
 </script>
